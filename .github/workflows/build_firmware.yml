@@ -1,0 +1,36 @@
+name: Build nRF52 Firmware
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install GNU Arm Embedded Toolchain
+      uses: emasque/setup-arm-gcc@v1
+      with:
+        release: '9-2020-q2'
+
+    - name: Build nRF52 firmware
+      run: |
+        make -f Makefile.nrf52 GNU_INSTALL_ROOT="" GNU_PREFIX=arm-none-eabi
+
+    - name: Build nRF51 firmware
+      run: |
+        make -f Makefile.nrf51 GNU_INSTALL_ROOT="" GNU_PREFIX=arm-none-eabi
+
+    - name: Upload firmware
+      uses: actions/upload-artifact@v4
+      with:
+        name: epd_calendar_firmware
+        path: |
+          _build_nrf52/nrf52811_xxaa.hex
+          _build_nrf51/nrf51822_xxaa.hex
