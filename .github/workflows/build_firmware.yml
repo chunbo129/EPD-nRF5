@@ -21,11 +21,11 @@ jobs:
 
     - name: Build nRF52 firmware
       run: |
-        make -f Makefile.nrf52 GNU_INSTALL_ROOT="" GNU_PREFIX=arm-none-eabi
+        make -f Makefile.nrf52 GNU_INSTALL_ROOT="" GNU_PREFIX=arm-none-eabi VERBOSE=1
 
     - name: Build nRF51 firmware
       run: |
-        make -f Makefile.nrf51 GNU_INSTALL_ROOT="" GNU_PREFIX=arm-none-eabi
+        make -f Makefile.nrf51 GNU_INSTALL_ROOT="" GNU_PREFIX=arm-none-eabi VERBOSE=1
 
     - name: Upload firmware
       uses: actions/upload-artifact@v4
