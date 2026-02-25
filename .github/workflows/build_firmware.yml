@@ -23,14 +23,9 @@ jobs:
       run: |
         make -f Makefile.nrf52 GNU_INSTALL_ROOT="" GNU_PREFIX=arm-none-eabi VERBOSE=1
 
-    - name: Build nRF51 firmware
-      run: |
-        make -f Makefile.nrf51 GNU_INSTALL_ROOT="" GNU_PREFIX=arm-none-eabi VERBOSE=1
-
     - name: Upload firmware
       uses: actions/upload-artifact@v4
       with:
         name: epd_calendar_firmware
         path: |
           _build_nrf52/nrf52811_xxaa.hex
-          _build_nrf51/nrf51822_xxaa.hex
