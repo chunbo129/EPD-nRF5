@@ -15,9 +15,9 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install GNU Arm Embedded Toolchain
-      uses: emasque/setup-arm-gcc@v1
+      uses: arm-software/setup-arm-toolchain@v1
       with:
-        release: '9-2020-q2'
+        arm-gcc-version: '9-2020-q2'
 
     - name: Build nRF52 firmware
       run: |
