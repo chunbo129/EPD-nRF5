@@ -40,15 +40,19 @@ static void UC81xx_SetWindow(epd_model_t* epd, uint16_t x, uint16_t y, uint16_t 
     }
 }
 
-void UC81xx_Refresh(epd_model_t* epd) {
+void UC81xx_Refresh(epd_model_t* epd, bool partial) {
     EPD_DEBUG("refresh begin");
 
     UC81xx_SetWindow(epd, 0, 0, epd->width, epd->height);
+
+    if (partial) EPD_WriteCmd(UC81xx_PTIN);
 
     EPD_WriteCmd(UC81xx_DRF);
     if (epd->color == COLOR_BWRY) EPD_WriteByte(0x00);
     delay(100);
     UC81xx_WaitBusy(UINT16_MAX);
+
+    if (partial) EPD_WriteCmd(UC81xx_PTOUT);
 
     EPD_DEBUG("refresh end");
 }
@@ -136,7 +140,7 @@ void UC81xx_Clear(epd_model_t* epd, bool refresh) {
             EPD_FillRAM(UC81xx_DTM2, 0xFF, wb * epd->height);
             break;
     }
-    if (refresh) UC81xx_Refresh(epd);
+    if (refresh) UC81xx_Refresh(epd, false);
 }
 
 void UC8176_WriteImage(epd_model_t* epd, uint8_t* black, uint8_t* color, uint16_t x, uint16_t y, uint16_t w,

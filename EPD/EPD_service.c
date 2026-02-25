@@ -53,7 +53,7 @@ static void epd_gui_update(void* p_event_data, uint16_t event_size) {
     if (err_code == NRF_SUCCESS && dev_name_len > 0) data.ssid[dev_name_len] = '\0';
 
     DrawGUI(&data, (buffer_callback)epd->drv->write_image, epd);
-    epd->drv->refresh(epd);
+    epd->drv->refresh(epd, event->partial);
     EPD_GPIO_Uninit();
 
     app_feed_wdt();
@@ -151,7 +151,7 @@ static void epd_service_on_write(ble_epd_t* p_epd, uint8_t* p_data, uint16_t len
 
         case EPD_CMD_REFRESH:
             epd_update_display_mode(p_epd, MODE_PICTURE);
-            p_epd->epd->drv->refresh(p_epd->epd);
+            p_epd->epd->drv->refresh(p_epd->epd, false);
             break;
 
         case EPD_CMD_SLEEP:
@@ -381,7 +381,8 @@ void ble_epd_on_timer(ble_epd_t* p_epd, uint32_t timestamp, bool force_update) {
     // Update calendar on 00:00:00, clock on every minute
     if (force_update || (p_epd->config.display_mode == MODE_CALENDAR && timestamp % 86400 == 0) ||
         (p_epd->config.display_mode == MODE_CLOCK && timestamp % 60 == 0)) {
-        epd_gui_update_event_t event = {p_epd, timestamp};
+        bool partial = (p_epd->config.display_mode == MODE_CLOCK) && !force_update && (timestamp % 86400 != 0);
+        epd_gui_update_event_t event = {p_epd, timestamp, partial};
         app_sched_event_put(&event, sizeof(epd_gui_update_event_t), epd_gui_update);
     }
 }

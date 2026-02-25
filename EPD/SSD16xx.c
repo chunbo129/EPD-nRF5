@@ -45,12 +45,15 @@ void SSD16xx_Init(epd_model_t* epd) {
     SSD16xx_SetWindow(epd, 0, 0, epd->width, epd->height);
 }
 
-static void SSD16xx_Refresh(epd_model_t* epd) {
+static void SSD16xx_Refresh(epd_model_t* epd, bool partial) {
     EPD_Write(SSD16xx_DISP_CTRL1, epd->color == COLOR_BWR ? 0x80 : 0x40, 0x00);
 
     EPD_DEBUG("refresh begin");
     EPD_DEBUG("temperature: %d", SSD16xx_ReadTemp(epd));
-    SSD16xx_Update(0xF7);
+    if (partial)
+        SSD16xx_Update(0x0C);
+    else
+        SSD16xx_Update(0xF7);
     SSD16xx_WaitBusy(UINT16_MAX);
     EPD_DEBUG("refresh end");
     SSD16xx_SetWindow(epd, 0, 0, epd->width, epd->height);  // DO NOT REMOVE!
@@ -64,7 +67,7 @@ void SSD16xx_Clear(epd_model_t* epd, bool refresh) {
     EPD_FillRAM(SSD16xx_WRITE_RAM1, 0xFF, ram_bytes);
     EPD_FillRAM(SSD16xx_WRITE_RAM2, 0xFF, ram_bytes);
 
-    if (refresh) SSD16xx_Refresh(epd);
+    if (refresh) SSD16xx_Refresh(epd, false);
 }
 
 void SSD16xx_WriteImage(epd_model_t* epd, uint8_t* black, uint8_t* color, uint16_t x, uint16_t y, uint16_t w,

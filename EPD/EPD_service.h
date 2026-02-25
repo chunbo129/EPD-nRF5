@@ -102,6 +102,7 @@ typedef struct {
 typedef struct {
     ble_epd_t* p_epd;
     uint32_t timestamp;
+    bool partial;
 } epd_gui_update_event_t;
 
 #define EPD_GUI_SCHD_EVENT_DATA_SIZE sizeof(epd_gui_update_event_t)
