@@ -15,9 +15,11 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install GNU Arm Embedded Toolchain
-      uses: arm-software/setup-arm-toolchain@v1
-      with:
-        arm-gcc-version: '9-2020-q2'
+      run: |
+        curl -L -o gcc.tar.bz2 "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2"
+        sudo mkdir -p /opt/gcc
+        sudo tar -xjf gcc.tar.bz2 -C /opt/gcc --strip-components=1
+        echo "/opt/gcc/bin" >> $GITHUB_PATH
 
     - name: Build nRF52 firmware
       run: |
