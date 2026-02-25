@@ -180,7 +180,7 @@ LDFLAGS += -mcpu=cortex-m4
 # let linker dump unused sections
 LDFLAGS += -Wl,--gc-sections
 # use newlib in nano version
-LDFLAGS += --specs=nano.specs
+LDFLAGS += --specs=nano.specs --specs=nosys.specs
 
 nrf52811_xxaa: CFLAGS += -D__HEAP_SIZE=8192
 nrf52811_xxaa: CFLAGS += -D__STACK_SIZE=2048
@@ -203,7 +203,7 @@ include $(TEMPLATE_PATH)/Makefile.common
 
 $(foreach target, $(TARGETS), $(call define_target, $(target)))
 
-nrf52811_xxaa: LINKER_SCRIPT  := $(SDK_ROOT)/components/softdevice/s112/toolchain/armgcc/armgcc_s112_nrf52810_xxaa.ld
+nrf52811_xxaa: LINKER_SCRIPT  := $(SDK_ROOT)/gcc_nrf52.ld
 
 .PHONY: flash softdevice erase
 

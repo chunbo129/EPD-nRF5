@@ -125,7 +125,7 @@ LDFLAGS += $(OPT)
 LDFLAGS += -mthumb -mabi=aapcs -L$(SDK_ROOT)/components/toolchain/gcc -T$(LINKER_SCRIPT)
 LDFLAGS += -mcpu=cortex-m0
 LDFLAGS += -Wl,--gc-sections
-LDFLAGS += --specs=nano.specs
+LDFLAGS += --specs=nano.specs --specs=nosys.specs
 
 # Add standard libraries at the very end of the linker input
 LIB_FILES += -lc -lnosys -lm
@@ -140,4 +140,4 @@ include $(TEMPLATE_PATH)/Makefile.common
 
 $(foreach target, $(TARGETS), $(call define_target, $(target)))
 
-nrf51822_xxaa: LINKER_SCRIPT  := $(SDK_ROOT)/components/softdevice/s130/toolchain/armgcc/armgcc_s130_nrf51822_xxaa.ld
+nrf51822_xxaa: LINKER_SCRIPT  := $(SDK_ROOT)/gcc_nrf51.ld
