@@ -15,15 +15,17 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install GNU Arm Embedded Toolchain
-      uses: stephanos/setup-arm-toolchain@v1
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-arm-none-eabi
 
     - name: Build nRF52 firmware
       run: |
-        make -f Makefile.nrf52 GNU_INSTALL_ROOT="${{ env.ZEPHYR_SDK_INSTALL_DIR }}/arm-zephyr-eabi/bin/" GNU_PREFIX=arm-zephyr-eabi
+        make -f Makefile.nrf52 GNU_INSTALL_ROOT="" GNU_PREFIX=arm-none-eabi
 
     - name: Build nRF51 firmware
       run: |
-        make -f Makefile.nrf51 GNU_INSTALL_ROOT="${{ env.ZEPHYR_SDK_INSTALL_DIR }}/arm-zephyr-eabi/bin/" GNU_PREFIX=arm-zephyr-eabi
+        make -f Makefile.nrf51 GNU_INSTALL_ROOT="" GNU_PREFIX=arm-none-eabi
 
     - name: Upload firmware
       uses: actions/upload-artifact@v4
