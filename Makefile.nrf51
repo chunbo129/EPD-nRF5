@@ -99,6 +99,7 @@ CFLAGS += -D__STACK_SIZE=1200
 CFLAGS += -mcpu=cortex-m0
 CFLAGS += -mthumb -mabi=aapcs
 CFLAGS += -Wall -Werror
+CFLAGS += -Wno-array-bounds
 CFLAGS += -mfloat-abi=soft
 CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
 CFLAGS += -fno-builtin -fshort-enums
