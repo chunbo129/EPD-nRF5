@@ -35,7 +35,7 @@ jobs:
       run: |
         # S112 v7.3.0 FWID is 0x126. S112 v7.2.0 is 0x103. Allow both.
         # Assuming tools/priv.pem exists in the repo.
-        nrfutil pkg generate --hw-version 52 --application-version 1 --application _build_nrf52/nrf52811_xxaa.hex --sd-req 0x126,0x103 --key-file tools/priv.pem _build_nrf52/app_dfu_package.zip
+        nrfutil pkg generate --hw-version 52 --application-version 2 --application _build_nrf52/nrf52811_xxaa.hex --sd-req 0x126,0x103 --key-file tools/priv.pem _build_nrf52/app_dfu_package.zip
 
     - name: Upload firmware
       uses: actions/upload-artifact@v4
