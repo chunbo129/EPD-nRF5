@@ -15,6 +15,10 @@ $KEY_FILE = "tools/priv.pem"
 $SD_REQ   = "0x0103" # S112 v7.2.0
 $APP_VER  = 1        # Application version (increment this for updates)
 
+# Note: nrfutil (classic) has compatibility issues with Python 3.11+.
+# It is recommended to use Python 3.9 if you encounter errors.
+
+
 # Check if hex file exists
 if (-not (Test-Path $HEX_FILE)) {
     Write-Error "Hex file not found: $HEX_FILE. Please build the project first."
