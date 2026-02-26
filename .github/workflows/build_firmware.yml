@@ -1,3 +1,5 @@
+# GitHub Workflow for building nRF52 firmware and DFU package
+
 name: Build nRF52 Firmware
 
 on:
@@ -14,14 +16,26 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install GNU Arm Embedded Toolchain
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y gcc-arm-none-eabi
+        pip install nrfutil
 
     - name: Build nRF52 firmware
       run: |
         make -f Makefile.nrf52 GNU_INSTALL_ROOT="" GNU_PREFIX=arm-none-eabi VERBOSE=1
+
+    - name: Generate DFU package
+      run: |
+        # S112 v7.2.0 FWID is 0x0103. Use 0xFFFE for any version if needed, but specific is safer.
+        # Assuming tools/priv.pem exists in the repo.
+        nrfutil pkg generate --hw-version 52 --application-version 1 --application _build_nrf52/nrf52811_xxaa.hex --sd-req 0x0103 --key-file tools/priv.pem _build_nrf52/app_dfu_package.zip
 
     - name: Upload firmware
       uses: actions/upload-artifact@v4
@@ -29,3 +43,4 @@ jobs:
         name: epd_calendar_firmware
         path: |
           _build_nrf52/nrf52811_xxaa.hex
+          _build_nrf52/app_dfu_package.zip
