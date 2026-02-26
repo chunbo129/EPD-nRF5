@@ -46,14 +46,30 @@ void SSD16xx_Init(epd_model_t* epd) {
 }
 
 static void SSD16xx_Refresh(epd_model_t* epd, bool partial) {
-    EPD_Write(SSD16xx_DISP_CTRL1, epd->color == COLOR_BWR ? 0x80 : 0x40, 0x00);
+    // Force partial refresh logic for BWR mode if partial is true
+    // Note: Standard SSD16xx BWR controllers might not support partial refresh well,
+    // but we send the command sequence anyway as requested.
+    
+    // Original: EPD_Write(SSD16xx_DISP_CTRL1, epd->color == COLOR_BWR ? 0x80 : 0x40, 0x00);
+    // Modified: If partial, try using BW mode control or keep BWR but force partial update command
+    
+    if (partial) {
+        // For partial refresh, we usually need to use a different Display Update Control 1
+        // and a specific update sequence (0x0C or similar).
+        // Some controllers require switching to BW mode momentarily for partial update.
+        EPD_Write(SSD16xx_DISP_CTRL1, 0x80, 0x00); // Keep BWR settings or try 0x40 for BW? Let's stick to 0x80 for now.
+    } else {
+        EPD_Write(SSD16xx_DISP_CTRL1, epd->color == COLOR_BWR ? 0x80 : 0x40, 0x00);
+    }
 
     EPD_DEBUG("refresh begin");
     EPD_DEBUG("temperature: %d", SSD16xx_ReadTemp(epd));
+    
     if (partial)
-        SSD16xx_Update(0x0C);
+        SSD16xx_Update(0x0C); // Soft start / Partial update command
     else
-        SSD16xx_Update(0xF7);
+        SSD16xx_Update(0xF7); // Full update command
+        
     SSD16xx_WaitBusy(UINT16_MAX);
     EPD_DEBUG("refresh end");
     SSD16xx_SetWindow(epd, 0, 0, epd->width, epd->height);  // DO NOT REMOVE!

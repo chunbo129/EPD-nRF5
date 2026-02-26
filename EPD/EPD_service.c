@@ -379,9 +379,9 @@ uint32_t ble_epd_string_send(ble_epd_t* p_epd, uint8_t* p_string, uint16_t lengt
 
 void ble_epd_on_timer(ble_epd_t* p_epd, uint32_t timestamp, bool force_update) {
     // Update calendar on 00:00:00, clock on every minute
-    if (force_update || (p_epd->config.display_mode == MODE_CALENDAR && timestamp % 86400 == 0) ||
-        (p_epd->config.display_mode == MODE_CLOCK && timestamp % 60 == 0)) {
-        bool partial = (p_epd->config.display_mode == MODE_CLOCK) && !force_update && (timestamp % 86400 != 0);
+    // Modified: Force partial refresh every minute for testing/usage as requested.
+    if (force_update || (timestamp % 60 == 0)) {
+        bool partial = !force_update && (timestamp % 86400 != 0);
         epd_gui_update_event_t event = {p_epd, timestamp, partial};
         app_sched_event_put(&event, sizeof(epd_gui_update_event_t), epd_gui_update);
     }
