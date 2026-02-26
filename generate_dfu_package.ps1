@@ -12,8 +12,9 @@ $ErrorActionPreference = "Stop"
 $HEX_FILE = "_build_nrf52/nrf52811_xxaa.hex"
 $OUT_FILE = "_build_nrf52/app_dfu_package.zip"
 $KEY_FILE = "tools/priv.pem"
-$SD_REQ   = "0x126,0x103" # S112 v7.3.0 (0x126) and v7.2.0 (0x103)
-$APP_VER  = 2        # Application version (increment this for updates)
+$SD_REQ   = "0xFFFE" # Allow any SoftDevice version (0xFFFE)
+# Old: $SD_REQ   = "0x126,0x103" # S112 v7.3.0 (0x126) and v7.2.0 (0x103)
+$APP_VER  = 3        # Application version (increment this for updates)
 
 # Note: nrfutil (classic) has compatibility issues with Python 3.11+.
 # It is recommended to use Python 3.9 if you encounter errors.
